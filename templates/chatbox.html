@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    .container {
+        display: flex;
+    }
+    .left-column {
+        flex: 70%; /* Cột trái chiếm 70% không gian */
+        background-color: #ffdddd;
+    }
+    .right-column {
+        flex: 30%; /* Cột phải chiếm 30% không gian */
+        background-color: #ddddff;
+    }
+    /* Sử dụng Media Queries để ẩn cột phải khi màn hình dưới 600px */
+    @media (max-width: 600px) {
+        .right-column {
+            display: none;
+        }
+        .left-column {
+            flex: 100%; /* Cột trái chiếm toàn bộ không gian khi cột phải ẩn */
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="left-column">
+        <p>Cột trái</p>
+    </div>
+    <div class="right-column">
+        <p>Cột phải</p>
+    </div>
+</div>
+
+</body>
+</html>

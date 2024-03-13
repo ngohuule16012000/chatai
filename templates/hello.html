@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .chat-container {
+            width: 400px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .chat-header img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .chat-messages {
+            padding: 20px;
+            height: 200px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 15px;
+        }
+        .message:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+   {% for message in messages %}
+      <p>{{ message }}</p>
+   {% endfor %}
+    <div class="--dark-theme" id="chat">
+        
+        <div class="chat__conversation-board">
+            {% for message in messages %}
+            <div class="chat__conversation-board__message-container">
+                <div class="chat__conversation-board__message__person">
+                  <div class="chat__conversation-board__message__person__avatar"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Monika Figi"/></div><span class="chat__conversation-board__message__person__nickname">Monika Figi</span>
+                </div>
+                <div class="chat__conversation-board__message__context">
+                  <div class="chat__conversation-board__message__bubble"> <span>{{ message }}</span></div>
+                </div>
+                <div class="chat__conversation-board__message__options">
+                  <button class="btn-icon chat__conversation-board__message__option-button option-item emoji-button">
+                    <svg class="feather feather-smile sc-dnqmqq jxshSx" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                      <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                      <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                    </svg>
+                  </button>
+                  <button class="btn-icon chat__conversation-board__message__option-button option-item more-button">
+                    <svg class="feather feather-more-horizontal sc-dnqmqq jxshSx" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="1"></circle>
+                      <circle cx="19" cy="12" r="1"></circle>
+                      <circle cx="5" cy="12" r="1"></circle>
+                    </svg>
+                  </button>
+                </div>
+            </div>
+            {% endfor %}
+              
+        </div>
+       
+        <div class="chat__conversation-panel">
+            <div class="chat__conversation-panel__container">
+                <input id="userInput" type="text" class="chat__conversation-panel__input panel-item" placeholder="Hãy nhập một câu hỏi ..."/>
+                <button onclick="classifyMessage()" class="chat__conversation-panel__button panel-item btn-icon send-message-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-reactid="1036">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function classifyMessage() {
+            var input = document.getElementById("userInput");
+            var message = input.value.trim();
+            if (message) {
+                $.post("/classify_message", { message: message }, function(data) {
+                    var chatbox = document.getElementById("chatbox");
+                    chatbox.innerHTML += "<p>" + message + "</p>" + " </p> (Prediction: " + data.prediction + ")</p>";
+                    input.value = ""; // Clear input after sending
+                    chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+                });
+            }
+        }
+    </script>
+</body>
+</html>
